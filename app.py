@@ -1,4 +1,4 @@
-    df = pd.read_csv("WA_Fn-UseC_-Telco-Customer-Churn.csv")
+
 import streamlit as st
 import pandas as pd
 from sklearn.model_selection import train_test_split
