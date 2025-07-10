@@ -1,18 +1,46 @@
 import streamlit as st
 import pandas as pd
-import joblib
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+
+st.title("🔮 Telco Customer Churn Prediction (Trained Inside App)")
+
+@st.cache_data
+def load_and_train_model():
+    # Load dataset from GitHub
+    url = "https://raw.githubusercontent.com/blastchar/telco-churn/master/WA_Fn-UseC_-Telco-Customer-Churn.csv"
+    df = pd.read_csv(url)
+
+    # Clean and preprocess
+    df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors='coerce')
+    df.dropna(inplace=True)
+    df.drop('customerID', axis=1, inplace=True)
+    df['Churn'] = df['Churn'].map({'Yes': 1, 'No': 0})
+
+    le = LabelEncoder()
+    for col in df.select_dtypes(include='object').columns:
+        df[col] = le.fit_transform(df[col])
+
+    X = df.drop('Churn', axis=1)
+    y = df['Churn']
+
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+
+    model = RandomForestClassifier(random_state=42)
+    model.fit(X_scaled, y)
+
+    return model, scaler
 
 # Load model and scaler
-model = joblib.load("best_churn_model.pkl")
-scaler = joblib.load("scaler.pkl")
+model, scaler = load_and_train_model()
 
-st.title("🔮 Telco Customer Churn Prediction")
-
-# Input fields
+# UI Input Form
 gender = st.selectbox("Gender", ["Female", "Male"])
 SeniorCitizen = st.selectbox("Senior Citizen", ["No", "Yes"])
-Partner = st.selectbox("Partner", ["No", "Yes"])
-Dependents = st.selectbox("Dependents", ["No", "Yes"])
+Partner = st.selectbox("Has Partner?", ["No", "Yes"])
+Dependents = st.selectbox("Has Dependents?", ["No", "Yes"])
 tenure = st.slider("Tenure (months)", 0, 72, 12)
 PhoneService = st.selectbox("Phone Service", ["No", "Yes"])
 MultipleLines = st.selectbox("Multiple Lines", ["No", "Yes", "No phone service"])
@@ -25,11 +53,14 @@ StreamingTV = st.selectbox("Streaming TV", ["No", "Yes", "No internet service"])
 StreamingMovies = st.selectbox("Streaming Movies", ["No", "Yes", "No internet service"])
 Contract = st.selectbox("Contract", ["Month-to-month", "One year", "Two year"])
 PaperlessBilling = st.selectbox("Paperless Billing", ["No", "Yes"])
-PaymentMethod = st.selectbox("Payment Method", ["Electronic check", "Mailed check", 
-    "Bank transfer (automatic)", "Credit card (automatic)"])
+PaymentMethod = st.selectbox("Payment Method", [
+    "Electronic check", "Mailed check",
+    "Bank transfer (automatic)", "Credit card (automatic)"
+])
 MonthlyCharges = st.number_input("Monthly Charges", min_value=0.0, max_value=200.0, value=70.0)
 TotalCharges = st.number_input("Total Charges", min_value=0.0, max_value=10000.0, value=2000.0)
 
+# Encode input
 def encode(val, mapping):
     return mapping[val]
 
