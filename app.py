@@ -61,7 +61,8 @@ st.markdown("<h1>📞 Telco Customer Churn Predictor 💡</h1>", unsafe_allow_ht
 @st.cache_data
 def load_and_train_model():
     url = "https://raw.githubusercontent.com/IBM/telco-customer-churn-on-icp4d/master/data/Telco-Customer-Churn.csv"
-    df = pd.read_csv("WA_Fn-UseC_-Telco-Customer-Churn")
+    df = pd.read_csv("https://raw.githubusercontent.com/IBM/telco-customer-churn-on-icp4d/master/data/Telco-Customer-Churn.csv")
+
     df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors='coerce')
     df.dropna(inplace=True)
     df.drop('customerID', axis=1, errors='ignore', inplace=True)
