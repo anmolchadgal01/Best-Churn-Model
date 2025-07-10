@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -57,12 +56,12 @@ footer {visibility: hidden;}
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<h1>\ud83d\udcde Telco Customer Churn Predictor \ud83d\udca1</h1>", unsafe_allow_html=True)
+st.markdown("<h1>📞 Telco Customer Churn Predictor 💡</h1>", unsafe_allow_html=True)
 
 @st.cache_data
 def load_and_train_model():
     url = "https://raw.githubusercontent.com/IBM/telco-customer-churn-on-icp4d/master/data/Telco-Customer-Churn.csv"
-    df = pd.read_csv("WA_Fn-UseC_-Telco-Customer-Churn.csv")
+    df = pd.read_csv("WA_Fn-UseC_-Telco-Customer-Churn")
     df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors='coerce')
     df.dropna(inplace=True)
     df.drop('customerID', axis=1, errors='ignore', inplace=True)
@@ -146,10 +145,9 @@ if st.button("Predict Churn"):
     probability = model.predict_proba(input_scaled)[0][1]
 
     st.markdown("---")
-    st.subheader("\ud83d\udcca Prediction Result")
+    st.subheader("📊 Prediction Result")
 
     if prediction[0] == 1:
-        st.error(f"\u26a0\ufe0f The customer is likely to **churn**.\n\nProbability: **{probability * 100:.2f}%** \ud83d\udc94")
+        st.error(f"⚠️ The customer is likely to **churn**.\n\nProbability: **{probability * 100:.2f}%** 💔")
     else:
-        st.success(f"\u2705 The customer is likely to **stay**.\n\nProbability of churn: **{probability * 100:.2f}%** \ud83e\udd73")
-
+        st.success(f"✅ The customer is likely to **stay**.\n\nProbability of churn: **{probability * 100:.2f}%** 🥳")
