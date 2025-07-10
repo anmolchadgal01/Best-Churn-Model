@@ -10,7 +10,7 @@ st.title("🔮 Telco Customer Churn Prediction (Trained Inside App)")
 def load_and_train_model():
     # Load dataset from GitHub
     url = "https://raw.githubusercontent.com/blastchar/telco-churn/master/WA_Fn-UseC_-Telco-Customer-Churn.csv"
-    df = pd.read_csv("https://raw.githubusercontent.com/<your-username>/<your-repo>/main/WA_Fn-UseC_-Telco-Customer-Churn.csv")
+    df = pd.read_csv("WA_Fn-UseC_-Telco-Customer-Churn.csv")
 
 
     # Clean and preprocess
